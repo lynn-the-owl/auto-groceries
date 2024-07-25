@@ -2,6 +2,16 @@ import cv2
 from pyzbar.pyzbar import decode
 from PIL import Image, ImageTk
 import tkinter as tk
+from utils import getPriceFromBigC
+
+
+def show_price_screen(canvas, product_code):
+    # Clear the canvas
+    canvas.delete("all")
+    price = getPriceFromBigC(product_code)
+
+    canvas.create_text(320, 240, text=price,
+                       font=("Arial", 24), fill="red")
 
 
 def detect_and_display_barcode(frame, canvas):
@@ -10,14 +20,18 @@ def detect_and_display_barcode(frame, canvas):
 
     # Decode barcodes
     decoded_objects = decode(image)
-    for obj in decoded_objects:
-        print(f"Type: {obj.type}")
-        print(f"Data: {obj.data.decode('utf-8')}")
+    if decoded_objects:
+        for obj in decoded_objects:
 
-    # Convert image to ImageTk
-    image_tk = ImageTk.PhotoImage(image)
-    canvas.create_image(0, 0, anchor=tk.NW, image=image_tk)
-    canvas.image = image_tk
+            product_code = obj.data.decode('utf-8')
+            show_price_screen(canvas, product_code)
+           # Stop video feed update
+        return
+    else:
+        # Convert image to ImageTk and display it
+        image_tk = ImageTk.PhotoImage(image)
+        canvas.create_image(0, 0, anchor=tk.NW, image=image_tk)
+        canvas.image = image_tk
 
     # Update GUI
     root.after(10, update_frame, video_capture, canvas)
