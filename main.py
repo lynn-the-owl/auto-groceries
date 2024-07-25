@@ -2,7 +2,7 @@ import cv2
 from pyzbar.pyzbar import decode
 from PIL import Image, ImageTk
 import tkinter as tk
-from utils import getPriceFromBigC
+from utils import get_price_and_product_title_from_big_c
 
 # Global variable to track if a barcode has been detected
 barcode_detected = False
@@ -14,7 +14,7 @@ def show_price_screen(canvas, product_code):
 
     # Clear the canvas
     canvas.delete("all")
-    price = getPriceFromBigC(product_code)
+    price = get_price_and_product_title_from_big_c(product_code)
 
     canvas.create_text(320, 240, text=price, font=("Arial", 24), fill="red")
 
